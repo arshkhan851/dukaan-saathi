@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dukaan Saathi</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        #recordBtn { background: #ff4444; color: white; border: none; border-radius: 50%; width: 120px; height: 120px; font-size: 16px; font-weight: bold; cursor: pointer; margin: 20px; user-select: none; touch-action: none; }
+        #recordBtn.recording { background: #cc0000; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        #transcript { min-height: 50px; padding: 15px; background: #f8f9fa; border: 1px solid #dee2e6; margin-bottom: 20px; border-radius: 8px; font-size: 1.1em;}
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; text-align: left; }
+        th, td { border: 1px solid #ddd; padding: 12px; }
+        th { background-color: #f2f2f2; }
+        .credit { color: #d32f2f; font-weight: bold; } 
+        .payment { color: #388e3c; font-weight: bold; }
+        #command { box-sizing: border-box; width: min(100%, 420px); min-height: 48px; padding: 12px; font-size: 16px; }
+        #commandForm button { padding: 12px 16px; margin: 6px; font-size: 16px; cursor: pointer; }
+        #language { padding: 8px; font-size: 16px; }
+        #reviewCard { display: none; text-align: left; border: 1px solid #cfd8dc; border-radius: 10px; padding: 16px; margin: 14px 0 22px; background: #fff; }
+        #reviewCard h3 { margin: 0 0 12px; text-align: center; }
+        #reviewCard label { display: block; font-weight: 600; margin: 10px 0 5px; }
+        #reviewCard input, #reviewCard select { box-sizing: border-box; width: 100%; padding: 11px; font-size: 16px; border: 1px solid #bbb; border-radius: 6px; }
+        .review-actions { display: flex; gap: 10px; margin-top: 14px; }
+        .review-actions button { flex: 1; padding: 12px; font-size: 15px; cursor: pointer; }
+        #confirmBtn { background: #198754; color: white; border: 0; border-radius: 6px; }
+        #cancelBtn { background: #f1f3f5; border: 1px solid #bbb; border-radius: 6px; }
+        .hint { color: #555; font-size: .9em; }
+    </style>
+</head>
+<body>
+    <h1>Dukaan Saathi</h1>
+    <p>Hold to record a command. Audio is processed by server-side speech recognition.</p>
+    
+    <button id="recordBtn">Hold to Speak</button>
+    <label for="language">Speech language:</label>
+    <select id="language"><option value="hi-IN">Hindi</option><option value="kn-IN">Kannada</option></select>
+    <p>Or type a command. Example: Ramesh ko 200 udhaar / Ramesh ne 50 jama kiye</p>
+    <form id="commandForm">
+        <input id="command" autocomplete="off" placeholder="Customer and amount" aria-label="Ledger command">
+        <button type="submit">Review command</button>
+    </form>
+    <div id="transcript">Transcript will appear here...</div>
+
+    <section id="reviewCard" aria-live="polite">
+        <h3>Review transaction before saving</h3>
+        <p class="hint">Check the customer name carefully. Speech recognition can mishear names. You can edit it here.</p>
+        <label for="reviewCustomer">Customer name</label>
+        <input id="reviewCustomer" autocomplete="off" maxlength="100">
+        <label for="reviewAmount">Amount (₹)</label>
+        <input id="reviewAmount" type="number" min="0.01" step="0.01">
+        <label for="reviewType">Transaction type</label>
+        <select id="reviewType">
+            <option value="credit">Credit (you gave money / udhaar)</option>
+            <option value="payment">Payment (customer paid you)</option>
+        </select>
+        <div class="review-actions">
+            <button id="confirmBtn" type="button">Confirm &amp; Save</button>
+            <button id="cancelBtn" type="button">Cancel</button>
+        </div>
+    </section>
+
+    <h2>Recent Ledger</h2>
+    <table id="ledgerTable">
+        <thead><tr><th>Time</th><th>Customer</th><th>Amount</th><th>Type</th></tr></thead>
+        <tbody></tbody>
+    </table>
+    
+    <!-- Scripts at the very bottom -->
+    <script src="app.js?v=8"></script>
+</body>
+</html>
